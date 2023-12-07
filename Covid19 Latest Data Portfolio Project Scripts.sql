@@ -121,7 +121,7 @@ select *, (People_Vaccinated/Population)*100
 from PopvsVac
 
 -- Let's use temp table
--- Create a global temporary table ##
+-- Create a global temporary table
 create temporary table PopulationVaccinatedPercentage (
 continent varchar(50),
 location varchar(50),
@@ -130,7 +130,7 @@ population double,
 new_vaccinations double,
 people_vaccinated double)
 
--- Insert data into the global temporary table ##
+-- Insert data into the global temporary table
 insert into PopulationVaccinatedPercentage
 select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations, 
 sum(vac.new_vaccinations) over (partition by dea.location order by dea.location, dea.date) as people_vaccinated
@@ -140,11 +140,11 @@ join portfolioproject.covidvaccinations vac
 	and dea.date = vac.date
 where trim(dea.continent) <> ''
 
--- Query from the global temporary table ##
+-- Query from the global temporary table
 select *, (people_vaccinated/population)*100 as population_vaccinated
 from PopulationVaccinatedPercentage
 
--- Drop the global temporary table ##
+-- Drop the global temporary table
 drop table if exists PopulationVaccinatedPercentage
 
 -- Create View to store data for later visualizations
