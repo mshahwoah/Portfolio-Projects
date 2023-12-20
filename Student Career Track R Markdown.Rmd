@@ -1,0 +1,153 @@
+---
+title: "Student Career Track"
+author: "Muhamad Shaheedeazam"
+date: "2023-12-20"
+output: html_document
+---
+
+## Load necessary libraries
+
+```{r loading packages}
+library(readxl)
+Student_Completion_Career_Track_Analysis <-
+  read_excel("C:/Users/MuhamadShahee.H/Desktop/Azam/Portfolio/Student Completion Career Track Analysis.xlsx")
+library(tidyverse)
+library(here)
+library(skimr)
+library(janitor)
+```
+
+## Load and Explore the Data
+#### View the dataset
+```{r}
+view(Student_Completion_Career_Track_Analysis)
+```
+
+#### Display the first few rows of the dataset
+```{r}
+head(Student_Completion_Career_Track_Analysis)
+```
+
+#### Check the structure of the dataset
+```{r}
+str(Student_Completion_Career_Track_Analysis)
+```
+
+#### Display column names
+```{r}
+colnames(Student_Completion_Career_Track_Analysis)
+```
+
+## Data Cleaning and Wrangling
+#### Display summary statistics without charts
+```{r}
+skim_without_charts(Student_Completion_Career_Track_Analysis)
+```
+
+#### Glimpse at the dataset
+```{r}
+glimpse(Student_Completion_Career_Track_Analysis)
+```
+
+#### Select and filter columns
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  select(track_name)
+```
+
+#### Select and filter columns, excluding 'track_name'
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  select(-track_name)
+```
+
+#### Rename a column
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  rename(role_name = track_name)
+```
+
+#### Clean column names
+```{r}
+clean_names(Student_Completion_Career_Track_Analysis)
+```
+
+## Sorting Data
+#### Sort data by date_enrolled in ascending order
+```{r}
+Student_Completion_Career_Track_Analysis %>% arrange(date_enrolled)
+```
+
+#### Sort data by date_enrolled in descending order
+```{r}
+Student_Completion_Career_Track_Analysis %>% arrange(desc(date_enrolled))
+```
+
+#### Create a new dataset with sorted data
+```{r}
+Student_Completion_Career_Track_Analysis_V2 <- Student_Completion_Career_Track_Analysis %>%
+  arrange(desc(date_enrolled))
+View(Student_Completion_Career_Track_Analysis_V2)
+```
+
+## Grouping and Summarizing Data
+#### Group data by 'days_for_completion' and calculate mean date_enrolled
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  group_by(days_for_completion) %>%
+  drop_na() %>%
+  summarize(date_enrolled_2 = mean(date_enrolled))
+```
+
+#### Group data by 'track_name' and calculate maximum days_for_completion
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  group_by(track_name) %>%
+  drop_na() %>%
+  summarize(completion_days = max(days_for_completion))
+```
+
+#### Group data by 'days_for_completion' and 'track_name', calculate mean date_enrolled
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  group_by(days_for_completion, track_name) %>%
+  drop_na() %>%
+  summarize(date_enrolled_2 = mean(date_enrolled))
+```
+
+#### Group data by 'track_completed_status' and 'track_name', calculate max days_for_completion and mean date_enrolled
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  group_by(track_completed_status, track_name) %>%
+  drop_na() %>%
+  summarize(max_CD = max(days_for_completion), mean_DE = mean(date_enrolled))
+```
+
+## Filtering Data
+#### Filter data for completed tracks
+```{r}
+Student_Completion_Career_Track_Analysis %>%
+  filter(track_completed_status == "Complete")
+```
+
+## Data Visualization
+#### Create a bar chart showing completion status for each track
+```{r}
+ggplot(data = Student_Completion_Career_Track_Analysis) +
+  geom_bar(mapping = aes(x=track_name, fill=track_completed_status)) +
+  labs(title = "Student Completion Career Track", subtitle = "Career Track")
+```
+
+#### Create a bar chart showing completion status for each track with customized titles
+```{r}
+ggplot(data = Student_Completion_Career_Track_Analysis) +
+  geom_bar(mapping = aes(x=track_name, fill=track_completed_status)) +
+  labs(title = "Student Completion Career Track", subtitle = "Career Track")
+```
+
+#### Create a bar chart showing completion status for each track with customized titles
+```{r}
+ggplot(data = Student_Completion_Career_Track_Analysis) +
+  geom_bar(mapping = aes(x=days_for_completion, fill=track_completed_status)) +
+  labs(title = "Student Completion Career Track", subtitle = "Career Track")
+```
